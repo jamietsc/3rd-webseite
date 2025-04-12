@@ -8,4 +8,10 @@
     <AssemblyName>$(AssemblyName.Replace(' ', '_'))</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="8.0.15" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.15" />
+  </ItemGroup>
+
 </Project>

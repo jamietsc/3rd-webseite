@@ -1,5 +1,100 @@
-﻿<h3>Register</h3>
+﻿@page "/register"
+
+@using ThirdWebseite.Models.ViewModels
+@using ThirdWebseite.DataAccessLayer.Data
+@using ThirdWebseite.DataAccessLayer.Repositories
+@using Microsoft.Extensions.Identity.Core
+
+@inject NavigationManager NavManager
+@inject IUserData<RegisterViewModel> userData
+
+<div class="row">
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <EditForm Model="@Model" OnValidSubmit="RegisterNewUser" FormName="RegisterForm">
+            <DataAnnotationsValidator/>
+            <div class="mb-3 text-center flex-column">
+                <!--<img src="images/logo.png" alt="Logo" class="img-fluid mb-3" /> -->
+                <h3>Register</h3>
+            </div>
+            <div class="mb-3">
+                <label>Username</label>
+                <InputText @bind-Value="Model.UserName" class="form-control" placeholder="Username"/>
+                <ValidationMessage For="() => Model.UserName" />
+            </div>
+            <div class="mb-3">
+                <label>Email</label>
+                <InputText @bind-Value="Model.Email" type="email" class="form-control" placeholder="Email" />
+                <ValidationMessage For="() => Model.Email" />
+            </div>
+            <div class="mb-3">
+                <label>Password</label>
+                <InputText @bind-Value="Model.Password" type="password" class="form-control" placeholder="Password" />
+                <ValidationMessage For="() => Model.Password" />
+            </div>
+            <div class="mb-3">
+                <label>Confirm Password</label>
+                <InputText @bind-Value="Model.ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" />
+
+            </div>
+            <div class="mb-3 text-center">
+                <span class="text-danger">@errorMessage</span>
+            </div>
+            <div class="mb-3 text-center">
+                <span class="text-success">@successMessage</span>
+            </div>
+            <div class="mb-3 d-grid gap-2">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </EditForm>
+    </div>
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <span>You already have an account? Click <a href="/login">here</a></span>        
+    </div>
+</div>
 
 @code {
+    [CascadingParameter]
+    public HttpContext? HttpContext { get; set; }
 
+    [SupplyParameterFromForm]
+    public RegisterViewModel Model { get; set; } = new RegisterViewModel();
+
+    private string? errorMessage;
+    private string? successMessage;
+
+    private async Task RegisterNewUser()
+    {
+        if (Model.Password != Model.ConfirmPassword)
+        {
+            errorMessage = "Passwords do not match.";
+            return;
+        }
+
+        try
+        {
+            Model.Role = "Admin";
+
+            Console.WriteLine($"Registering user:\n Vor DB Abfrage: {Model.UserName},\n Email: {Model.Email}\n Passsword: {Model.Password},\n Role: {Model.Role}");
+
+            var successfullRegistration = await userData.RegisterUser(Model);
+
+            if(!successfullRegistration)
+            {
+                Console.WriteLine("Registration failed.");
+                errorMessage = "Registration failed. Please try again.";
+            }
+            else
+            {
+                Console.WriteLine("Registration successful.");
+                successMessage = "Registration successful. You will be redirected.";
+                await Task.Delay(1000);
+                NavManager.NavigateTo("/login");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error during registration: {ex.Message}");
+            errorMessage = ex.Message;
+        }
+    }
 }

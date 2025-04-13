@@ -1,29 +1,35 @@
 ﻿@inject AuthenticationStateProvider AuthProvider
 
+<AuthorizeView Context="authContext">
+    <Authorized>
+        <nav class="navbar">
+            <ul class="nav-list">
+                <li><NavLink href="/" Match="NavLinkMatch.All">Home</NavLink></li>
+                <li><NavLink href="/beats">Beats</NavLink></li>
+                <li><NavLink href="/cart">Cart</NavLink></li>
 
-<nav class="navbar">
-    <ul class="nav-list">
-        <li><NavLink href="/" Match="NavLinkMatch.All">Startseite</NavLink></li>
-        <li><NavLink href="/beats">Beats</NavLink></li>
-        <li><NavLink href="/cart">Warenkorb</NavLink></li>
+                <AuthorizeView Roles="Admin" Context="adminContext">
+                    <li><NavLink href="/dashboard">Dashboard</NavLink></li>
+                    <li><NavLink href="/orders">Sells</NavLink></li>
+                    <li><NavLink href="/upload">Upload</NavLink></li>
+                </AuthorizeView>
 
-        @if(isAdmin)
-        {
-            <li><NavLink href="/dashboard">Übersicht</NavLink></li>
-            <li><NavLink href="/orders">Bestellungen</NavLink></li>
-            <li><NavLink href="/upload">Hochladen</NavLink></li>
-        }
+                <li><NavLink href="/logout">Logout</NavLink></li>
+            </ul>
+        </nav>
+    </Authorized>
 
-        @if (isLoggedIn)
-        {
-            <li><NavLink href="/logout">Abmelden</NavLink></li>
-        }
-        else
-        {
-            <li><NavLink href="/login">Anmelden</NavLink></li>
-        }
-    </ul>
-</nav>
+    <NotAuthorized>
+        <nav class="navbar">
+            <ul class="nav-list">
+                <li><NavLink href="/" Match="NavLinkMatch.All">Home</NavLink></li>
+                <li><NavLink href="/beats">Beats</NavLink></li>
+                <li><NavLink href="/login">Login</NavLink></li>
+            </ul>
+        </nav>
+    </NotAuthorized>
+</AuthorizeView>
+
 
 @code {
     private bool isAdmin = false;
@@ -34,7 +40,6 @@
         var authState = await AuthProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
-        isLoggedIn = user.Identity?.IsAuthenticated ?? false;
-        isAdmin = user.IsInRole("Admin");
+        isLoggedIn = user.Identity?.IsAuthenticated ?? false;   
     }
 }

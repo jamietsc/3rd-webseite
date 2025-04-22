@@ -1,24 +1,15 @@
 ﻿@inject AuthenticationStateProvider AuthProvider
 
-<AuthorizeView Context="authContext">
+<AuthorizeView Roles="Admin,User">
     <Authorized>
         <nav class="navbar">
             <ul class="nav-list">
                 <li><NavLink href="/" Match="NavLinkMatch.All">Home</NavLink></li>
                 <li><NavLink href="/beats">Beats</NavLink></li>
                 <li><NavLink href="/cart">Cart</NavLink></li>
-
-                <AuthorizeView Roles="Admin" Context="adminContext">
-                    <li><NavLink href="/dashboard">Dashboard</NavLink></li>
-                    <li><NavLink href="/orders">Sells</NavLink></li>
-                    <li><NavLink href="/upload">Upload</NavLink></li>
-                </AuthorizeView>
-
-                <li><NavLink href="/logout">Logout</NavLink></li>
-            </ul>
+                </ul>
         </nav>
     </Authorized>
-
     <NotAuthorized>
         <nav class="navbar">
             <ul class="nav-list">
@@ -29,6 +20,19 @@
         </nav>
     </NotAuthorized>
 </AuthorizeView>
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <li><NavLink href="/dashboard">Dashboard</NavLink></li>
+        <li><NavLink href="/orders">Sells</NavLink></li>
+        <li><NavLink href="/upload">Upload</NavLink></li>
+    </Authorized>
+
+</AuthorizeView>
+
+
+
+
+
 
 
 @code {

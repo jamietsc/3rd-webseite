@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using ThirdWebseite.Models.ViewModels;
 
 namespace ThirdWebseite.DataAccessLayer.Repositories
 {
@@ -10,6 +11,6 @@ namespace ThirdWebseite.DataAccessLayer.Repositories
         Task<bool> RegisterUser(T user);
 
         //Login Method
-        Task<bool> LoginUser(T user);
+        Task<bool> LoginUser(LoginViewModel User);
     }
 }

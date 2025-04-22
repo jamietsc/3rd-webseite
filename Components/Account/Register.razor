@@ -72,29 +72,22 @@
 
         try
         {
-            Model.Role = "Admin";
-
-            Console.WriteLine($"Registering user:\n Vor DB Abfrage: {Model.UserName},\n Email: {Model.Email}\n Passsword: {Model.Password},\n Role: {Model.Role}");
-
+            Model.Role = "User"; // Default role for new users
             var successfullRegistration = await userData.RegisterUser(Model);
 
             if(!successfullRegistration)
             {
-                Console.WriteLine("Registration failed.");
                 errorMessage = "Registration failed. Please try again.";
             }
             else
             {
-                Console.WriteLine("Registration successful.");
-                successMessage = "Registration successful. You will be redirected.";
-                await Task.Delay(1000);
-                NavManager.NavigateTo("/login");
+                successMessage = "Registration successful. You can login now.";
+                NavManager.NavigateTo("/");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error during registration: {ex.Message}");
-            errorMessage = ex.Message;
+            errorMessage = "Error while registration. Please contact the support.";
         }
     }
 }

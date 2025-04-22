@@ -2,6 +2,17 @@
 
 <NavMenu></NavMenu>
 
+<div class="top-row px-4">
+   <AuthorizeView>
+       <NotAuthorized>
+            <a href="/login">Login</a>
+       </NotAuthorized>
+       <Authorized>
+            <a href="/logout">Logout</a>
+       </Authorized>
+   </AuthorizeView>
+</div>
+
 <div class="main">
     <div class="content px-4">
         @Body
